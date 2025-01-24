@@ -1,0 +1,31 @@
+model User {
+  id                      String         @id @default(uuid())
+  email                   String         @unique
+  password                String
+  name                    String
+  handle                  String         @unique
+  bio                     String?        @db.VarChar(160)
+  website                 String?        @db.VarChar(100)
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime?      @updatedAt
+  deletedAt               DateTime?
+  isPrivate                 Boolean        @default(false)
+  avatar                  Media?         @relation("UserAvatar")
+  avatarId                String?
+  tweets                  Tweet[]
+  retweets                Retweet[]
+  posts                   Post[]
+  likes                   Like[]
+  media                   Media[]
+  o_Interactions          Interaction[]  @relation("OriginatorInteraction")
+  r_Interactions          Interaction[]  @relation("RecepientInteraction")
+  notifications           Notification[]
+  vip                     User[]         @relation("UserVip")
+  vipParent               User?          @relation("UserVip", fields: [vipParentId], references: [id])
+  vipParentId             String?
+  blockList               User[]         @relation("BlockerBlocked")
+  blockerList             User[]         @relation("BlockerBlocked")
+  following               User[]         @relation("FollowingFollowers")
+  followers               User[]         @relation("FollowingFollowers")
+  notificationParticipant Notification[] @relation("NotificationParticipant")
+}

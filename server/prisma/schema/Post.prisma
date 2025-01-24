@@ -1,0 +1,12 @@
+model Post {
+    id           String        @id @default(uuid())
+    type         PostType
+    tweet        Tweet?
+    retweet      Retweet?
+    author       User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId     String
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime?     @updatedAt
+    deletedAt    DateTime?
+    interactions Interaction[] @relation("PostInteraction")
+}

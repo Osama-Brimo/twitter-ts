@@ -1,0 +1,11 @@
+model Interaction {
+    id           String   @id @default(uuid())
+    createdAt    DateTime @default(now())
+    originator   User     @relation("OriginatorInteraction", fields: [originatorId], references: [id], onDelete: Cascade)
+    originatorId String
+    recepient    User     @relation("RecepientInteraction", fields: [recepientId], references: [id], onDelete: Cascade)
+    recepientId  String
+    post         Post?    @relation("PostInteraction", fields: [postId], references: [id], onDelete: Cascade)
+    postId       String
+    type         Event
+}

@@ -1,0 +1,23 @@
+model Tweet {
+  id          String        @id @default(uuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?     @updatedAt
+  media       Media[]
+  content     String
+  authorId    String
+  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes       Like[]
+  retweets    Retweet[]
+  quoteId     String?
+  quoting     Tweet?        @relation("QuoteQuoted", fields: [quoteId], references: [id])
+  quotedBy    Tweet[]       @relation("QuoteQuoted")
+  parentId    String?
+  // TODO: What happens when the parent tweet is deleted?
+  parent      Tweet?        @relation("TweetReplies", fields: [parentId], references: [id])
+  children    Tweet[]       @relation("TweetReplies")
+  postId      String?       @unique
+  post        Post?         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  hashtags    Hashtag[]
+  meta        TweetMetaInfo @relation(fields: [metaId], references: [id])
+  metaId String        @unique
+}

@@ -1,0 +1,6 @@
+model TweetMetaInfo {
+    id          String      @id @default(uuid())
+    tweetId     String?      @unique
+    tweet       Tweet?
+    galleryType GalleryType @default(CAROUSEL)
+}

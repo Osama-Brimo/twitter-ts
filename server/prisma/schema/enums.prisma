@@ -1,0 +1,19 @@
+enum Event {
+  REPLY
+  MENTION
+  RETWEET
+  QUOTE
+  LIKE
+  FOLLOW
+  RETWEET_LIKE
+}
+
+enum PostType {
+  TWEET
+  RETWEET
+}
+
+enum GalleryType {
+  CAROUSEL
+  QUILT
+}

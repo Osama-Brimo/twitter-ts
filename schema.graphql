@@ -1,0 +1,314 @@
+# Note: properties beginning with _ are relative to the currently logged in user
+# i.e. _followed returns if the current user is following the target user
+
+scalar DateTime
+scalar UUID
+scalar NonNegativeInt
+scalar JSON
+scalar JWT
+scalar Upload
+
+enum Trend {
+  HASHTAG
+  TOPIC
+}
+
+enum Event {
+  REPLY
+  MENTION
+  RETWEET
+  QUOTE
+  LIKE
+  FOLLOW
+}
+
+enum PostType {
+  TWEET
+  RETWEET
+}
+
+enum IntersectionUserTypes {
+  Following
+  Followers
+  FollowingFollowers
+}
+
+enum GalleryType {
+  CAROUSEL
+  QUILT
+}
+
+type Query {
+  # User
+  currentUser: User
+  # Tweet
+  tweet: Tweet!
+  allTweets(offset: Int, limit: Int): [Tweet!]!
+  # Retweets
+  retweet: Retweet!
+  allRetweets(offset: Int, limit: Int): [Retweet!]!
+  # Post
+  post: Post!
+  allPosts(offset: Int, limit: Int): [Post!]!
+
+  like: Like!
+
+  # /user
+  userByHandle(handle: String): User
+  allUserPosts(handle: String, offset: Int, limit: Int): [Post]
+  allUserLikes(handle: String, offset: Int, limit: Int): [Like]
+  allUserFollowers(handle: String, offset: Int, limit: Int): [User]
+  allUserFollowing(handle: String, offset: Int, limit: Int): [User]
+
+  # /search
+  searchPostsAndCount(
+    q: String
+    hashtag: String
+    includeRetweets: Boolean
+    offset: Int
+    limit: Int
+  ): SearchResult!
+  searchUsersAndCount(q: String, offset: Int, limit: Int): SearchResult!
+  searchHashtagsAndCount(q: String, offset: Int, limit: Int): SearchResult!
+
+  getHashtag(hashtag: String): Hashtag
+
+  findCommonBetweenUsers(
+    handleA: String
+    handleB: String
+    intersectionUserType: IntersectionUserTypes
+  ): [User]
+
+  getPostWithReplies(id: UUID!): Post!
+}
+
+type Mutation {
+  # Create
+  createUser(
+    email: String!
+    password: String!
+    handle: String!
+    name: String!
+    avatarId: UUID
+    isPrivate: Boolean
+  ): UserPayload
+
+  loginUser(email: String!, password: String!): UserPayload
+
+  logoutUser: Boolean!
+
+  createTweet(
+    authorId: UUID!
+    content: String!
+    media: [UUID]
+    quoteOf: UUID
+    replyOf: UUID
+  ): Post!
+
+  createLike(tweetId: UUID, userId: UUID): Like!
+
+  createHashtag(kind: Trend!, hashtag: String!): Hashtag!
+
+  createInteraction(
+    originatorId: UUID!
+    recepientId: UUID!
+    postId: UUID
+    type: Event!
+  ): Interaction!
+
+  createNotification(
+    userId: UUID!
+    type: Event!
+    link: String
+    resourceId: String
+  ): Notification!
+
+  createMedia(
+    key: String!
+    filename: String!
+    mimetype: String!
+    extension: String!
+    size: NonNegativeInt!
+    tweetId: UUID
+    uploaderId: UUID
+    asAvatar: Boolean
+  ): Media!
+
+  # Update
+  followUser(userId: UUID!): User!
+  unfollowUser(userId: UUID!): User!
+  likePost(userId: UUID!, postId: UUID!, retweeterId: UUID): Post!
+  retweetTweet(userId: UUID!, tweetId: UUID!): Tweet!
+  markNotificationsAsSeen(notificationIds: [UUID!]!): Boolean!
+  markPostsAsSeen(postIds: [UUID!]!): Boolean!
+  blockUser(userId: UUID!): User!
+  unblockUser(userId: UUID!): User!
+
+  # Delete
+  deleteTweet(authorId: UUID!, tweetId: UUID!, postId: UUID): Post!
+  deletePost(authorId: UUID!, postId: UUID!): Post!
+  unlikePost(userId: UUID!, tweetId: UUID!): Post!
+  unretweetTweet(userId: UUID!, tweetId: UUID!): Tweet!
+  deleteManyMedia(mediaIds: [UUID!]!): [Media!]!
+  deleteNotification(notificationId: UUID!): Notification!
+}
+
+type Subscription {
+  newNotification(userId: UUID!): Notification!
+}
+
+type User {
+  id: UUID!
+  email: String!
+  name: String!
+  handle: String!
+  bio: String
+  website: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  isPrivate: Boolean
+  avatar: Media
+  avatarId: UUID
+  tweets: [Tweet]
+  likes: [Like]
+  retweets: [Retweet]
+  media: [Media]
+  o_interactions: [Interaction]
+  r_interactions: [Interaction]
+  notifications: [Notification]
+  vipParent: UUID
+  vip: [User]
+  blockerList: [User]
+  blockList: [User]
+  following: [User]
+  followers: [User]
+  _followed: Boolean!
+  _follower: Boolean!
+  _blocked: Boolean!
+  _blocker: Boolean!
+  _IsVip: Boolean!
+}
+type Tweet {
+  id: UUID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  content: String!
+  media: [Media]
+  postId: UUID
+  post: Post
+  authorId: UUID!
+  author: User
+  likes: [Like]
+  likeCount: NonNegativeInt!
+  retweets: [Retweet]
+  retweetCount: NonNegativeInt!
+  quoteId: UUID
+  quoting: Tweet
+  quotedBy: [Tweet]
+  parentId: UUID
+  parent: Tweet
+  children: [Tweet]
+  replyCount: NonNegativeInt!
+  meta: TweetMeta!
+  _liked: Boolean!
+  _retweeted: Boolean!
+}
+type Retweet {
+  createdAt: DateTime!
+  postId: UUID
+  post: Post
+  userId: UUID!
+  user: User
+  tweetId: UUID!
+  tweet: Tweet!
+}
+type Post {
+  id: UUID!
+  type: PostType!
+  tweet: Tweet
+  retweet: Retweet
+  authorId: UUID!
+  author: User
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  _seen: Boolean!
+}
+type Like {
+  createdAt: DateTime!
+  userId: UUID!
+  user: User
+  tweetId: UUID!
+  tweet: Tweet
+}
+type Hashtag {
+  id: UUID!
+  kind: Trend!
+  hashtag: String!
+  tweets: [Tweet]
+  tweetCount: NonNegativeInt!
+}
+type Interaction {
+  id: UUID!
+  createdAt: DateTime!
+  originator: User
+  originatorId: UUID!
+  recepient: User
+  recepientId: UUID!
+  post: Post
+  postId: UUID
+  type: Event!
+}
+type Notification {
+  id: UUID!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  user: User!
+  userId: UUID!
+  link: String
+  seen: Boolean
+  type: Event!
+  participants: [User!]!
+  squashedCount: NonNegativeInt!
+  message: String!
+  resourceId: String
+}
+type Media {
+  id: UUID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  key: String!
+  filename: String!
+  mimetype: String!
+  extension: String!
+  size: NonNegativeInt!
+  url: String!
+  tweet: Tweet
+  tweetId: UUID
+  uploader: User
+  uploaderId: UUID
+  avatarUser: User
+  avatarUserID: UUID
+}
+# custom
+type UserPayload {
+  token: JWT!
+  user: User!
+}
+
+union Searchable = Post | User | Hashtag
+
+type SearchResult {
+  result: [Searchable]
+  count: NonNegativeInt!
+}
+
+# Not related to clientside TweetMetaInfo
+# This type is used as an object that holds misc. meta info that should be persisted to db
+type TweetMeta {
+  id: UUID!
+  tweetId: UUID!
+  tweet: Tweet!
+  galleryType: GalleryType!
+}

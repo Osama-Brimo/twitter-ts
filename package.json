@@ -1,0 +1,33 @@
+{
+  "name": "twitter-ts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev-server": "cd server && npm run dev",
+    "dev-client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\"",
+    "codegen-server": "cd server && npm run codegen",
+    "codegen-client": "cd client && npm run codegen",
+    "codegen": "concurrently \"npm run codegen-server\" \"npm run codegen-client\""
+  },
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.6.0",
+    "@types/eslint__js": "^8.42.3",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-react": "^7.34.3",
+    "prettier": "3.3.2",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^7.15.0"
+  }
+}

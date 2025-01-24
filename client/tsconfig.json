@@ -1,0 +1,25 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@libs/*": ["./src/lib/*"]
+    },
+    // Required by apollo-upload-client
+    "allowJs": true,
+    "maxNodeModuleJsDepth": 10,
+    "module": "NodeNext",
+    //
+  },
+  "include": ["./src"],
+}
+

@@ -1,0 +1,12 @@
+model Notification {
+    id            String   @id @default(uuid())
+    createdAt     DateTime @default(now())
+    user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        String
+    link          String?
+    seen          Boolean  @default(false)
+    type          Event
+    participants  User[]   @relation("NotificationParticipant")
+    squashedCount Int      @default(0)
+    resourceId    String?
+}

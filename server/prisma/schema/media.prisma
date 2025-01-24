@@ -1,0 +1,16 @@
+model Media {
+    id           String    @id @default(uuid())
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime? @updatedAt
+    key          String    @unique
+    filename     String
+    mimetype     String
+    extension    String
+    size         Int
+    tweet        Tweet?    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+    tweetId      String?
+    uploader     User?     @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+    uploaderId   String?
+    avatarUser   User?     @relation("UserAvatar", fields: [avatarUserId], references: [id])
+    avatarUserId String?   @unique
+}
