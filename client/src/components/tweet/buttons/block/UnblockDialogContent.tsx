@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { toast } from 'sonner';
 import type {
+  MutationUnblockUserArgs,
   User,
   User as UserType,
 } from '@/gql/graphql.js';
@@ -18,9 +19,10 @@ import { useCallback } from 'react';
 
 interface UnblockDialogContentProps {
   targetUser: UserType;
+  onClose: () => void;
 }
 
-const UnblockDialogContent = ({ targetUser }: UnblockDialogContentProps) => {
+const UnblockDialogContent = ({ targetUser, onClose }: UnblockDialogContentProps) => {
   const { id, handle, _blocked } = targetUser ?? {};
 
   // Hooks
@@ -30,11 +32,15 @@ const UnblockDialogContent = ({ targetUser }: UnblockDialogContentProps) => {
   const handleUnblock = useCallback(async () => {
     try {
       if (id && _blocked) {
-        const variables = {
+        const variables: MutationUnblockUserArgs = {
           userId: id,
         };
         await unblockUser({
           variables,
+          onCompleted: () => {
+            onClose();
+            toast.success(`@${handle} unblocked.`);
+          },
           update(cache, { data }) {
             const updatedUser = data.unblockUser as User;
 
@@ -59,19 +65,17 @@ const UnblockDialogContent = ({ targetUser }: UnblockDialogContentProps) => {
               },
             });
           },
-          onCompleted: () => {
-            toast.success(`@${handle} unblocked.`);
-          },
         });
       }
     } catch (error) {
+      onClose();
       console.error(
         `[handleUnfollow]: Error while trying to unblock user ${handle}`,
         error,
       );
       toast.error('Something went wrong. Please try again later');
     }
-  }, [_blocked, handle, id, targetUser, unblockUser]);
+  }, [_blocked, handle, id, onClose, targetUser, unblockUser]);
 
   return (
     <AlertDialogContent>

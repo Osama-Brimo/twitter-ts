@@ -8,7 +8,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useUser } from '@/context/UserProvider';
-import { User } from '@/gql/graphql';
+import { MutationBlockUserArgs, User } from '@/gql/graphql';
 import { blockUser as blockUserMutation } from '@/gql/mutations/common/User';
 import { useMutation } from '@apollo/client';
 import { useCallback, useMemo } from 'react';
@@ -16,9 +16,10 @@ import { toast } from 'sonner';
 
 interface BlockDialogContentProps {
   targetUser: User;
+  onClose: () => void;
 }
 
-const BlockDialogContent = ({ targetUser }: BlockDialogContentProps) => {
+const BlockDialogContent = ({ targetUser, onClose }: BlockDialogContentProps) => {
   // GraphQL
   const { user: currentUser } = useUser();
   const [blockUser] = useMutation(blockUserMutation);
@@ -31,9 +32,14 @@ const BlockDialogContent = ({ targetUser }: BlockDialogContentProps) => {
   const handleBlock = useCallback(async () => {
     try {
       if (id && !isSelf && !_blocked) {
+        const variables: MutationBlockUserArgs = {
+          userId: targetUser.id,
+        };
         await blockUser({
-          variables: {
-            userId: targetUser.id,
+          variables,
+          onCompleted: () => {
+            onClose();
+            toast.success(`@${handle} was blocked.`);
           },
           update(cache, { data }) {
             const updatedUser = data.blockUser as User;
@@ -68,19 +74,17 @@ const BlockDialogContent = ({ targetUser }: BlockDialogContentProps) => {
               },
             });
           },
-          onCompleted: () => {
-            toast.success(`@${handle} was blocked.`);
-          },
         });
       }
     } catch (error) {
+      onClose();
       console.error(
         `[handleFollow]: Error while attempting to block user @${handle}`,
         error,
       );
       toast.error('Something went wrong. Please try again later.');
     }
-  }, [_blocked, blockUser, currentUser, handle, id, isSelf, targetUser]);
+  }, [_blocked, blockUser, currentUser, handle, id, isSelf, onClose, targetUser]);
 
   return (
     <AlertDialogContent>
