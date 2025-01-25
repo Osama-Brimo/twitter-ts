@@ -10,4 +10,9 @@ export default defineConfig({
       { find: '@libs', replacement: path.resolve(__dirname, 'src/lib') }
     ]
   },
+  server: {
+    fs: {
+      cachedChecks: false
+    },
+  }
 });

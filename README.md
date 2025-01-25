@@ -17,7 +17,10 @@ A Fullstack responsive social media site built with React, Express/Node.js, Apol
 - Automatic Dark/Light mode switching based on browser theme
 
 ## 📆 Planned Features
-- Ranking algorithm based on logged interactions to show a For You style feed
+- Ranking algorithm based on logged interactions
+  - 'For you' style feed based on ranking
+  - Ranking-based user suggestions
+  - 'See less often' feature for posts which demotes ranking
 - Instant messaging feature
 
 ## 🚀 Tech Stack
@@ -72,24 +75,31 @@ A Fullstack responsive social media site built with React, Express/Node.js, Apol
 ### Prerequisites
 - AWS Account (for S3)
 - Cloudfront distribution integrated with S3 bucket
-- Correct policy setup for S3 and Cloudfront (allow put/delete/get)
+- Signed URLs enabled on Cloudfront (with keypairs)
+- Correct user policy setup:
+  - GetObject, DeleteObject, PutObject permissions on S3 bucket
+  - CreateInvalidation on your Cloudfront distribution
 
 ### Installation
 
 1. **Clone the repository:**
 ```bash
 git clone https://github.com/yourusername/twitter-clone.git
-cd twitter-clone
+cd twitter-ts
 ```
 
 2. **Install dependencies:**
+
+Install client + server deps at once from monorepo root:
+
 ```bash 
 npm install
 ```
 
 3. **Set up environment variables:**
 
-Server `.env`:
+In the `/server` directory, create an `.env` file:
+
 ````
 DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
 
@@ -106,10 +116,16 @@ CLOUDFRONT_PRIVATE_KEY=""
 ````
 
 4. **Initialize Database:**
+
+From monorepo root:
+
 ```bash
 cd server
-npx prisma db push
+# Generate prisma client
+npx prisma generate
+# Run migrations
 npx prisma migrate dev
+# Seed database
 npm run seed
 ```
 
@@ -118,7 +134,7 @@ npm run seed
 From monorepo root:
 
 ```bash
-# runs Vite + GraphQL server together with concurrently
+# runs Vite + GraphQL server together using concurrently
 npm run dev
 ```
 

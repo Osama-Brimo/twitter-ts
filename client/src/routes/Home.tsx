@@ -1,11 +1,11 @@
 import { QueryResult, useLazyQuery } from '@apollo/client';
-import { allPosts } from '@/gql/queries/routes/Home';
+import { allPosts } from '../../src/gql/queries/routes/Home';
 import { toast } from 'sonner';
-import Feed from '@/components/app/feed/Feed';
-import TweetBox from '@/components/app/tweetbox/TweetBox';
+import Feed from '../components/app/feed/Feed';
+import TweetBox from '../components/app/tweetbox/TweetBox';
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { HomeFeedTypes } from '@/lib/types';
-import { useUser } from '@/context/UserProvider';
+import { HomeFeedTypes } from '../lib/types';
+import { useUser } from '../context/UserProvider';
 import HomeFeedNavTabs from '../components/app/NavTabs';
 
 // First update the type to be more specific

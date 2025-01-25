@@ -4,9 +4,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Tweet as TweetType } from '../../../../gql/graphql';
-import TweetBox from '../../../app/tweetbox/TweetBox';
-import Tweet from '../../Tweet';
+import { Tweet as TweetType } from '@/gql/graphql';
+import TweetBox from '@/components/app/tweetbox/TweetBox';
+import Tweet from '@/components/tweet/Tweet';
 import { TweetMetaInfo, TweetPreviewContext } from '@/lib/types';
 
 interface RetweetDialogContentProps {
