@@ -11,6 +11,7 @@ A Fullstack responsive social media site built with React, Express/Node.js, Apol
   - Tweet galleries (quilt and carousel types)
   - Search
   - Infinite scroll
+  - Hashtags and user suggestions
 - S3 and Cloudfront integration for file storage/upload, with signed urls (via REST)
 - Real-time user notifications delivered using a GraphQL Subscription
 - User system with JWT token-based authentication
