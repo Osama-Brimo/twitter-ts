@@ -10,6 +10,7 @@ import type { User, User as UserType } from '@/gql/graphql';
 import { Styles } from '@/lib/types';
 import UnfollowDialogContent from '@/components/tweet/buttons/follow/UnfollowDialogContent';
 import UnblockDialogContent from '../block/UnblockDialogContent';
+import { useNavigate } from 'react-router-dom';
 
 interface FollowButtonProps {
   targetUser: UserType;
@@ -30,7 +31,6 @@ enum FollowButtonVariant {
   DEFAULT = 'default',
   SECONDARY = 'secondary',
   DESTRUCTIVE = 'destructive',
-  
 }
 
 const styles: Styles = {
@@ -46,6 +46,7 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
   const { id, handle, _followed, _follower, _blocked, _blocker, isPrivate } =
     targetUser ?? {};
 
+  const navigate = useNavigate();
   const isSelf = useMemo(() => currentUser?.id === id, [currentUser?.id, id]);
 
   // Hooks
@@ -89,6 +90,10 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
   // Handlers
   const handleFollow = useCallback(async () => {
     try {
+      if (!currentUser?.id) {
+        navigate('/login');
+        return;
+      }
       if (targetUser?.id && !isSelf) {
         await followUser({
           variables: {
@@ -96,14 +101,14 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
           },
           update(cache, { data }) {
             const updatedUser = data.followUser as User;
-            
+
             // Update currentUser in the cache
             cache.modify({
               id: cache.identify(currentUser as User),
               fields: {
                 following: (prev) => {
                   if (prev?.length) {
-                    return [updatedUser, ...prev]
+                    return [updatedUser, ...prev];
                   }
                   return [updatedUser];
                 },
@@ -130,7 +135,7 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
       );
       toast.error('Something went wrong. Please try again later.');
     }
-  }, [followUser, handle, isSelf, targetUser]);
+  }, [currentUser, followUser, handle, isSelf, navigate, targetUser]);
 
   const handleMouseEnter = () => {
     setLabel(hoverLabel);

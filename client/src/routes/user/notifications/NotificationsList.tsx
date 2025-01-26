@@ -9,7 +9,11 @@ import { useUser } from '@/context/UserProvider';
 import { currentUser } from '@/gql/queries/common/User.js';
 import { get } from 'lodash';
 
-const NotificationsList = () => {
+interface NotificationsListProps {
+  filterUnread?: boolean;
+}
+
+const NotificationsList = ({ filterUnread = false }: NotificationsListProps) => {
   const { user } = useUser();
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
@@ -56,11 +60,12 @@ const NotificationsList = () => {
 
   useEffect(() => {
     if (user?.notifications) {
-      setNotifications(
-        user.notifications.filter((n): n is Notification => n !== null),
-      );
+      const filteredNotifications = user.notifications
+        .filter((n): n is Notification => n !== null)
+        .filter(n => !filterUnread || !n.seen);
+      setNotifications(filteredNotifications);
     }
-  }, [user]);
+  }, [user, filterUnread]);
 
   useEffect(() => {
     if (newNotificationData?.newNotification) {

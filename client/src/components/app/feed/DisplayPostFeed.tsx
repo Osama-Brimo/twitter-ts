@@ -9,7 +9,7 @@ import {
 import Tweet from '@/components/tweet/Tweet';
 import SkeletonContent from '@/components/app/SkeletonContent';
 import { DocumentNode } from 'graphql';
-import { Post } from '@/gql/graphql';
+import { Like, Post } from '@/gql/graphql';
 
 interface DisplayPostFeedProps {
   loading: boolean;
@@ -48,7 +48,6 @@ const DisplayPostFeed = ({
         case 'post':
           return getDisplayDataFromPost(item as Post, query, queryName);
         default:
-          // TODO: this is probably bad, but type problem
           return getDisplayDataFromPost(item as Post, query, queryName);
       }
     },

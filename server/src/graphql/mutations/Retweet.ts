@@ -86,7 +86,7 @@ export const retweetTweet: MutationResolvers<ApolloContext>['retweetTweet'] =
         recepientName: authorHandle,
         originatorId: userId,
         type: Event.RETWEET,
-        link: `/${userId}/${tweetId}`,
+        link: `/tweet/${tweetId}`,
         resourceId: tweet.postId,
         timestamp: Date.now(),
       });

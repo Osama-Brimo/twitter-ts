@@ -6,8 +6,9 @@ import {
 } from '@/components/ui/dialog';
 import { Tweet as TweetType } from '@/gql/graphql';
 import Tweet from '@/components/tweet/Tweet';
-import TweetBox from '@/components/app/tweetbox/TweetBox';
+import TweetBox from '@/components/app/TweetBox/TweetBox';
 import { TweetMetaInfo, TweetPreviewContext } from '@/lib/types';
+import { Link } from 'react-router-dom';
 
 interface ReplyDialogContentProps {
   data: TweetType;
@@ -15,6 +16,7 @@ interface ReplyDialogContentProps {
 }
 
 const ReplyDialogContent = ({ data, meta }: ReplyDialogContentProps) => {
+  const { author } = data ?? {};
   const { query, queryName } = meta ?? {};
   return (
     <DialogContent className="max-w-2xl">
@@ -25,12 +27,9 @@ const ReplyDialogContent = ({ data, meta }: ReplyDialogContentProps) => {
         meta={{ ...meta, previewContext: TweetPreviewContext.quoteDialog }}
         tweet={data}
       />
-      <div className="mt-5"></div>
       <DialogDescription>
         <span className="mr-1">Replying to</span>
-        <span>
-          <a href={`/${data?.author?.handle}`}>{data?.author?.handle}</a>
-        </span>
+        <Link to={`/user/${author?.handle}`}>@{author?.handle}</Link>
       </DialogDescription>
       <TweetBox
         context="reply"

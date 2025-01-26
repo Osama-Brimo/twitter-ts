@@ -68,7 +68,7 @@ const TweetDropdownMenu = ({ data }: TweetDropdownMenuProps) => {
   const handleCopyLink = async () => {
     const domain = location.origin;
     if (domain && handle && id) {
-      await navigator.clipboard.writeText(`${domain}/${handle}/${id}`);
+      await navigator.clipboard.writeText(`${domain}/tweet/${id}`);
       toast.success('Link copied!');
     } else {
       toast.error('Failed to copy link');

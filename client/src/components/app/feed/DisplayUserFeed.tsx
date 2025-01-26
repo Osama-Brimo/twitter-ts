@@ -16,7 +16,7 @@ const DisplayUserFeed = ({loading, items}: DisplayUserFeedProps) => {
         ) : (
           items?.map((item: User) => {
             return (
-              <UserCard user={item}/>
+              <UserCard user={item} key={item.id}/>
             );
           })
         )}

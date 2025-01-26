@@ -99,10 +99,10 @@ const ProfileHeader = ({ user, paramHandle }: ProfileHeaderProps) => {
               </div>
               <div className="flex py-3">
                 <p className="text-sm font-semibold mr-2">
-                  Following {followers?.length}
+                  Following {following?.length ?? 0}
                 </p>
                 <p className="text-sm font-semibold">
-                  Followers {following?.length}
+                  Followers {followers?.length ?? 0}
                 </p>
               </div>
             </div>

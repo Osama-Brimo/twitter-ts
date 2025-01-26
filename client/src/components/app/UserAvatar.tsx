@@ -44,7 +44,7 @@ const UserAvatar = ({
           onMouseEnter={enterHandler}
           onMouseLeave={leaveHandler}
         >
-          <Link to={`/${handle}`}>
+          <Link to={`/user/${handle}`}>
             <div className="flex">
               <Avatar className="h-12 w-12 flex select-none">
                 <AvatarImage src={avatar?.url} alt="Avatar" />

@@ -6,6 +6,8 @@ import Login from './Login';
 import Profile from './user/Profile';
 import Tweet from './user/tweet/Tweet';
 import Search from './Search';
+import Explore from './Explore';
+import NotFound from "@/components/app/NotFound";
 
 export const router = createBrowserRouter(
   [
@@ -18,13 +20,13 @@ export const router = createBrowserRouter(
           element: <Home />,
         },
         {
-          path: ':handle',
+          path: '/explore',
+          element: <Explore />,
+        },
+        {
+          path: '/user/:handle',
           element: <Profile />,
           children: [
-            {
-              path: 'tweet/:id',
-              element: <Tweet />,
-            },
             {
               path: 'posts',
               element: <Profile />,
@@ -44,6 +46,10 @@ export const router = createBrowserRouter(
           ],
         },
         {
+          path: '/tweet/:id',
+          element: <Tweet />,
+        },
+        {
           path: '/search',
           element: <Search />
         },
@@ -56,6 +62,10 @@ export const router = createBrowserRouter(
     {
       path: '/login',
       element: <Login />,
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ],
   {

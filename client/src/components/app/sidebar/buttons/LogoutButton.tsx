@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useUser } from '@/context/UserProvider';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
+import { LogOutIcon } from 'lucide-react';
 
 const LogoutButton = () => {
   const { logout } = useUser() ?? {};
@@ -17,6 +18,7 @@ const LogoutButton = () => {
 
   return (
     <DropdownMenuItem className="cursor-pointer" onClick={logoutHandler}>
+      <LogOutIcon />
       Logout
     </DropdownMenuItem>
   );

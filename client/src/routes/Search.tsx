@@ -188,7 +188,7 @@ const Search = () => {
   // Run inital search using Query Handlers
   useEffect(() => {
     const { searchType } = params;
-    const { searchPosts, searchUsers } = queryHandlers;
+    const { searchPostsHandler, searchUsersHandler } = queryHandlers;
 
     console.log(
       `search initializer useEffect ran with searchtype: ${searchType}`,
@@ -197,17 +197,17 @@ const Search = () => {
 
     switch (searchType) {
       case SearchTypeEnum.Posts:
-        searchPosts();
+        searchPostsHandler();
         break;
       case SearchTypeEnum.Users:
-        searchUsers();
+        searchUsersHandler();
         break;
       case SearchTypeEnum.PostsAndUsers:
-        searchPosts();
-        searchUsers();
+        searchPostsHandler();
+        searchUsersHandler();
         break;
       default:
-        searchPosts();
+        searchPostsHandler();
         break;
     }
   }, [params, queryHandlers]);
@@ -240,7 +240,7 @@ const Search = () => {
   return !anyQueryLoading ? (
     <>
       <FeedResultsMessage />
-      {/* // Feed A */}
+      {/* Feed A */}
       <Feed
         displayType={displayTypeA}
         itemType={itemTypeA}
@@ -250,7 +250,7 @@ const Search = () => {
         fetchMoreVars={fetchMoreVarsA}
         queryIsSearch={true}
       ></Feed>
-      {/* // Feed B */}
+      {/* Feed B */}
       <Feed
         displayType={displayTypeB}
         itemType={itemTypeB}

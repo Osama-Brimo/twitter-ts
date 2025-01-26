@@ -35,14 +35,13 @@ const Profile = () => {
 
   const { data, loading: userLoading } = useQuery(userByHandle, {
     variables: { handle },
+    onCompleted: (data) => {
+      console.log('user info loaded:', data);
+    },
     onError: (err) => {
       console.error(err);
       toast(err.message);
     },
-    onCompleted: (data) => {
-      console.log('user info loaded:', data);
-    },
-    // notifyOnNetworkStatusChange: true,
   });
 
   const user: User = useMemo(() => {
@@ -64,6 +63,7 @@ const Profile = () => {
   const displayType = useMemo(() => getFeedDisplayType(feedType), [feedType]);
 
   const feedLabel = useMemo(() => {
+    console.log(viewType, 'feedLabel');
     switch (viewType) {
       case 'followers':
         return `Followed by`;
@@ -97,7 +97,7 @@ const Profile = () => {
               );
               setFeedType('posts');
               setQueryResultItemType('post');
-              navigate(`/${handle}/posts`);
+              navigate(`/user/${handle}/posts`);
             },
             notifyOnNetworkStatusChange: true,
           });
@@ -118,7 +118,7 @@ const Profile = () => {
               );
               setFeedType('likes');
               setQueryResultItemType('like');
-              navigate(`/${handle}/likes`);
+              navigate(`/user/${handle}/likes`);
             },
             notifyOnNetworkStatusChange: true,
           });
@@ -139,7 +139,7 @@ const Profile = () => {
               );
               setFeedType('followers');
               setQueryResultItemType('user');
-              navigate(`/${handle}/followers`);
+              navigate(`/user/${handle}/followers`);
             },
             notifyOnNetworkStatusChange: true,
           });
@@ -160,7 +160,7 @@ const Profile = () => {
               );
               setFeedType('following');
               setQueryResultItemType('user');
-              navigate(`/${handle}/following`);
+              navigate(`/user/${handle}/following`);
             },
             notifyOnNetworkStatusChange: true,
           });

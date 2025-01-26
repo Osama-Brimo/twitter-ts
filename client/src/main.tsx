@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ApolloProvider client={client}>
       <AppProvider>
         <UserProvider>
-          <ThemeProvider>
+          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <RouterProvider router={router} />
           </ThemeProvider>
         </UserProvider>

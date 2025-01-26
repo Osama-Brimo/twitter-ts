@@ -9,6 +9,7 @@ import { FeedProps } from '@/lib/types';
 import DisplayPostFeed from './DisplayPostFeed';
 import DisplayUserFeed from './DisplayUserFeed';
 import DisplayMediaFeed from './DisplayMediaFeed';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Feed = ({
   displayType,
@@ -20,7 +21,6 @@ const Feed = ({
   fetchMoreVars,
   itemsPerPage = 15,
   feedLabel,
-  showCount,
   children,
 }: FeedProps) => {
   // Vars
@@ -87,67 +87,67 @@ const Feed = ({
     );
 
   return (
-    <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+    <div className="gap-4 lg:gap-8">
       {children}
       {items?.length ? (
-        <InfiniteScroll
-          dataLength={items?.length}
-          next={handleMore}
-          hasMore={hasMore}
-          loader={
-            isFetchingMore ? (
-              <>
-                <LoadingSpinner />
-                <SkeletonContent type="card" repeat={3} />
-              </>
-            ) : null
-          }
-          endMessage={
-            <p className="text-muted-foreground text-center my-8">
-              <b>No more posts to show</b>
-            </p>
-          }
-        >
-          {feedLabel && (
-            <p className="text-xl my-3 ml-2">
-              <b>{feedLabel}</b>
-              <b className="ml-2 text-sm text-muted-foreground">{`(${items?.length} total)`}</b>
-            </p>
-          )}
-          {displayType === 'post' && (
-            <DisplayPostFeed
-              loading={loading}
-              query={query}
-              queryName={queryName}
-              items={items}
-              itemType={itemType}
-            />
-          )}
-          {displayType === 'user' && (
-            <DisplayUserFeed
-              loading={loading}
-              query={query}
-              queryName={queryName}
-              items={items}
-            />
-          )}
-          {displayType === 'media' && (
-            <DisplayMediaFeed
-              loading={loading}
-              query={query}
-              queryName={queryName}
-              items={items}
-            />
-          )}
-        </InfiniteScroll>
+        <ScrollArea className='mt-8'>
+          <InfiniteScroll
+            dataLength={items?.length}
+            next={handleMore}
+            hasMore={hasMore}
+            loader={
+              isFetchingMore ? (
+                <>
+                  <LoadingSpinner />
+                  <SkeletonContent type="card" repeat={3} />
+                </>
+              ) : null
+            }
+            endMessage={
+              <p className="text-muted-foreground text-center my-8">
+                <b>No more posts to show</b>
+              </p>
+            }
+          >
+            {feedLabel && (
+              <p className="text-xl my-3 ml-2">
+                <b>{feedLabel}</b>
+                <b className="ml-2 text-sm text-muted-foreground">({items?.length ?? 0})</b>
+              </p>
+            )}
+            {displayType === 'post' && (
+              <DisplayPostFeed
+                loading={loading}
+                query={query}
+                queryName={queryName}
+                items={items}
+                itemType={itemType}
+              />
+            )}
+            {displayType === 'user' && (
+              <DisplayUserFeed
+                loading={loading}
+                query={query}
+                queryName={queryName}
+                items={items}
+              />
+            )}
+            {displayType === 'media' && (
+              <DisplayMediaFeed
+                loading={loading}
+                query={query}
+                queryName={queryName}
+                items={items}
+              />
+            )}
+          </InfiniteScroll>
+        </ScrollArea>
       ) : (
         <>
           {loading ? (
             <SkeletonContent type="card" repeat={4} />
           ) : (
-            <p
-              className={`text-muted-foreground text-center my-8 py-40`}
-            >
+            <p className={`text-muted-foreground text-center my-8 py-40`}>
               <b>Nothing here yet</b>
             </p>
           )}
