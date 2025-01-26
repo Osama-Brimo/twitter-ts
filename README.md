@@ -3,14 +3,22 @@
 A Fullstack responsive social media site built with React, Express/Node.js, Apollo/GraphQL, and ShadCN components. Uses Prisma with Postgres for ORM, and Vite as a build tool.
 
 ## ✨ Features
-- Twitter-like functionality (Feeds with tweets, retweets, liking, quotes, nested threads, etc.)
 - Typescript-integrated monorepo codebase with linting
-- S3 and Cloudfront integration for file storage, with signed urls (via REST/Axios)
+- Twitter-like functionality
+  - Feeds with Tweets, Retweets, Quote tweets
+  - Liking, Retweeting, and replying
+  - Nested threads for tweets
+  - Tweet galleries (quilt and carousel types)
+  - Search
+  - Infinite scroll
+- S3 and Cloudfront integration for file storage/upload, with signed urls (via REST)
 - Real-time user notifications delivered using a GraphQL Subscription
-- User system with JWT token-based authentication (with blocking, privating, and follow requests)
-- Interaction logging
-- Image upload, and dynamic in-tweet galleries
-- Searching, infinite scroll, client-side rate limiting
+- User system with JWT token-based authentication
+  - Login/Signup
+  - Blocking
+  - Private accounts/follow requests
+- Interaction logging for each user
+- Client-side rate limiting
 - Apollo client cache management
 - Rich text interaction (dynamic @mentions links, #hashtags, etc.)
 - React Hook Form validation with Zod
@@ -20,8 +28,8 @@ A Fullstack responsive social media site built with React, Express/Node.js, Apol
 - Ranking algorithm based on logged interactions
   - 'For you' style feed based on ranking
   - Ranking-based user suggestions
-  - 'See less often' feature for posts which demotes ranking
-- Instant messaging feature
+  - 'See less often' for posts which demotes ranking
+- Instant messaging
 
 ## 🚀 Tech Stack
 
