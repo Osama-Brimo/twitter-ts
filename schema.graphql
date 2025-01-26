@@ -80,6 +80,8 @@ type Query {
   ): [User]
 
   getPostWithReplies(id: UUID!): Post!
+
+  getUserSuggestions: [User]
 }
 
 type Mutation {

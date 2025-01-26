@@ -183,3 +183,13 @@ export const findCommonBetweenUsers = gql`
 
   ${USER_INFO_FRAGMENT}
 `;
+
+export const getUserSuggestions = gql`
+query getUserSuggestions {
+  getUserSuggestions {
+    ...UserInfoFragment
+  }
+}
+
+${USER_INFO_FRAGMENT}
+`;

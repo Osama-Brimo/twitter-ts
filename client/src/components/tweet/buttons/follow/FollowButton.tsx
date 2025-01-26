@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface FollowButtonProps {
   targetUser: UserType;
+  variant?: 'large' | 'compact';
 }
 
 enum FollowButtonLabel {
@@ -33,14 +34,8 @@ enum FollowButtonVariant {
   DESTRUCTIVE = 'destructive',
 }
 
-const styles: Styles = {
-  button: {
-    width: '200px',
-    minWidth: 'max-content',
-  },
-};
 
-const FollowButton = ({ targetUser }: FollowButtonProps) => {
+const FollowButton = ({ targetUser, variant = 'compact' }: FollowButtonProps) => {
   // Vars
   const { user: currentUser } = useUser();
   const { id, handle, _followed, _follower, _blocked, _blocker, isPrivate } =
@@ -78,6 +73,17 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
     if (_followed) return FollowButtonLabel.UNFOLLOW;
     return initialLabel;
   }, [_blocked, _blocker, _followed, initialLabel]);
+
+  const buttonClass = useMemo(() => {
+    switch (variant) {
+      case 'compact':
+        return '';      
+      case 'large':
+        return 'w-32';
+      default:
+        return '';
+    }
+  }, [variant]);
 
   // Effects
   useEffect(() => {
@@ -153,10 +159,10 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
         <AlertDialogTrigger asChild>
           <Button
             size="sm"
+            className={buttonClass}
             variant={buttonVariant}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            style={styles.button}
           >
             {label}
           </Button>
@@ -172,10 +178,10 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
         <AlertDialogTrigger asChild>
           <Button
             size="sm"
+            className={buttonClass}
             variant={buttonVariant}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            style={styles.button}
           >
             {label}
           </Button>
@@ -188,12 +194,12 @@ const FollowButton = ({ targetUser }: FollowButtonProps) => {
   return (
     <Button
       size="sm"
+      className={buttonClass}
       disabled={_blocker}
       variant={buttonVariant}
       onClick={handleFollow}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={styles.button}
     >
       {label}
     </Button>

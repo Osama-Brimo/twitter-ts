@@ -154,9 +154,6 @@ export const PostExtension = Prisma.defineExtension({
         handle && (q.where = { author: { handle } });
 
         const result: [Post] = await (context as any).findMany(q);
-
-        console.log(`[getAllPostsSortedByDate]: Result:`, result);
-
         return result;
       },
       async searchPostsAndCount<T>(

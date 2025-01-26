@@ -100,8 +100,6 @@ export const UserExtension = Prisma.defineExtension({
           (context as any).count({ where }),
         ]);
 
-        console.log('user search found this...', { result, count });
-
         return { result, count };
       },
       async getByHandle<T>(this: T, handle: string) {

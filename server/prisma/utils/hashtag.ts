@@ -32,9 +32,7 @@ export const HashtagExtension = Prisma.defineExtension({
           (context as any).findMany(query),
           (context as any).count({ where }),
         ]);
-
-        console.log('hashtag search found this...', { result, count });
-
+        
         return { result, count };
       },
     },

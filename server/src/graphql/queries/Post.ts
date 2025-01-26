@@ -11,8 +11,6 @@ export const allPosts: QueryResolvers<ApolloContext>['allPosts'] = async (
   try {
     const result = await db.post.getAllPostsSortedByDate('desc', limit, offset);
 
-    console.log(`[allPost]: GraphQL reoslver's result after awaiting:` ,result);
-
     return result;
   } catch (error) {
     throw new GraphQLError(error);
@@ -30,8 +28,6 @@ export const getPostWithReplies: QueryResolvers<ApolloContext>['getPostWithRepli
 
     const result = await db.post.getPost({ id });
 
-    console.log('[getPostWithReplies]: Found post:', id, result);
-
     if (result?.id) return result;
   } catch (error) {
     throw new GraphQLError(error);
@@ -45,7 +41,6 @@ export const allUserPosts: QueryResolvers<ApolloContext>['allUserPosts'] = async
 ) => {
   try {
     const result = await db.post.getAllPostsSortedByDate('desc', limit, offset, handle);
-    console.log('prisma result from Post.ts resolver...', result);
     return result;
   } catch (error) {
     throw new GraphQLError(error);

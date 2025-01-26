@@ -10,12 +10,20 @@ import { useEffect, useMemo, useState } from 'react';
 import AvatarStack from './AvatarStack';
 import { Badge } from '../ui/badge';
 import SkeletonContent from './SkeletonContent';
+
+type UserCardVariant = 'extended' | 'compact';
+
 interface UserCardProps {
   user: UserType;
   isVisible?: boolean;
+  variant?: UserCardVariant;
 }
 
-const UserCard = ({ user, isVisible = false }: UserCardProps) => {
+const UserCard = ({
+  user,
+  isVisible = false,
+  variant = 'extended',
+}: UserCardProps) => {
   const { user: currentUser } = useUser() ?? {};
   const {
     createdAt,
@@ -41,7 +49,6 @@ const UserCard = ({ user, isVisible = false }: UserCardProps) => {
 
   useEffect(() => {
     if (shouldFetchCommonFollowers) {
-      console.log('the test passed dude....');
       getQuery({
         variables: {
           handleA: currentUser?.handle,
@@ -62,56 +69,60 @@ const UserCard = ({ user, isVisible = false }: UserCardProps) => {
   if (!user?.id) return <SkeletonContent type="user" />;
 
   return (
-    <div className="flex space-x-4">
-      <Avatar className="h-12 w-12 flex">
-        <AvatarImage src={avatar?.url} alt="Avatar" />
-        <AvatarFallback>{user?.name?.at(0)?.toUpperCase()}</AvatarFallback>
-      </Avatar>
-      <div className="space-y-1 mt-3">
-        <div>
+    <div className="flex justify-between">
+      <div className='flex space-x-4'>
+        <Avatar className="h-12 w-12 flex">
+          <AvatarImage src={avatar?.url} alt="Avatar" />
+          <AvatarFallback>{user?.name?.at(0)?.toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div className="space-y-1 mt-3">
           <div>
-            <strong>{name}</strong>
-            {isPrivate && (
-              <Badge>
-                <LockKeyholeIcon size="16" />
+            <div>
+              <strong>{name}</strong>
+              {isPrivate && (
+                <Badge>
+                  <LockKeyholeIcon size="16" />
+                </Badge>
+              )}
+            </div>
+            <div>
+              <small className="text-xs text-muted-foreground">@{handle}</small>
+            </div>
+          </div>
+          <div>
+            {currentUser && _follower ? (
+              <Badge variant="secondary" className="mb-3">
+                Follows you
               </Badge>
-            )}
+            ) : null}
           </div>
-          <div>
-            <small className="text-xs text-muted-foreground">@{handle}</small>
-          </div>
+          {variant === 'extended' && (
+            <div>
+              <p className="text-xs text-pretty text-slate-400">{bio}</p>
+              <div className="flex py-3">
+                <p className="text-sm font-semibold mr-2 text-nowrap">
+                  Following {following?.length ?? 0}
+                </p>
+                <p className="text-sm font-semibold text-nowrap">
+                  Followers {followers?.length ?? 0}
+                </p>
+              </div>
+              {commonFollowers.length ? (
+                <div>
+                  <AvatarStack users={commonFollowers} />
+                </div>
+              ) : null}
+              {createdAt && (
+                <div className="flex items-center pt-2">
+                  <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{' '}
+                  <span className="text-xs text-muted-foreground">
+                    Joined on {readableDate(createdAt)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-        <div>
-          {currentUser && _follower ? (
-            <Badge variant="secondary" className="mb-3">
-              Follows you
-            </Badge>
-          ) : null}
-        </div>
-        <p className="text-xs text-pretty text-slate-400">
-          { bio }
-        </p>
-        <div className="flex py-3">
-          <p className="text-sm font-semibold mr-2 text-nowrap">
-            Following {following?.length ?? 0}
-          </p>
-          <p className="text-sm font-semibold text-nowrap">
-            Followers {followers?.length ?? 0}
-          </p>
-        </div>
-        {commonFollowers.length ? (
-          <div>
-            <AvatarStack users={commonFollowers} />
-          </div>
-        ) : null}
-        {createdAt && (
-          <div className="flex items-center pt-2">
-            <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{' '}
-            <span className="text-xs text-muted-foreground">
-              Joined on {readableDate(createdAt)}
-            </span>
-          </div>
-        )}
       </div>
       {currentUser && user?.id !== currentUser?.id && (
         <FollowButton targetUser={user} />
