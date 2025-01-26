@@ -16,7 +16,11 @@ import {
   searchPostsAndCount,
 } from '../queries/Post';
 import { allUserLikes } from '../queries/Like';
-import { getHashtag, searchHashtagsAndCount } from '../queries/Hashtag';
+import {
+  getHashtag,
+  searchHashtagsAndCount,
+  getTrendingHashtags,
+} from '../queries/Hashtag';
 
 const Query: QueryResolvers<ApolloContext> = {
   // User
@@ -37,6 +41,7 @@ const Query: QueryResolvers<ApolloContext> = {
   searchHashtagsAndCount,
   // Hashtag
   getHashtag,
+  getTrendingHashtags,
 };
 
 export default Query;

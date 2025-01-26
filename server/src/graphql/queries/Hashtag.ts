@@ -14,7 +14,7 @@ export const searchHashtagsAndCount: QueryResolvers<ApolloContext>['searchHashta
       );
       return searchResult;
     } catch (error) {
-      throw new GraphQLError(error.message);
+      throw new GraphQLError(error);
     }
   };
 
@@ -28,8 +28,37 @@ export const getHashtag: QueryResolvers<ApolloContext>['getHashtag'] = async (
       where: { hashtag },
       include: { tweets: true },
     });
+
+    if(!result?.id) {
+      throw new GraphQLError(`Could not find hashtag ${hashtag}`);
+    }
+
     return result;
   } catch (error) {
-    throw new GraphQLError(error.message);
+    throw new GraphQLError(error);
   }
 };
+
+export const getTrendingHashtags: QueryResolvers<ApolloContext>['getTrendingHashtags'] =
+  async (_parent, _args, { db }) => {
+    try {
+      // Get 3 most popular hashtags by tweet count
+      const result = await db.hashtag.findMany({
+        take: 4,
+        orderBy: {
+          tweets: {
+            _count: 'desc',
+          },
+        },
+        include: {
+          tweets: true,
+        }
+      });
+
+      console.log(`[getTrendingHashtags]`, result);
+
+      return result;
+    } catch (error) {
+      throw new GraphQLError(error);
+    }
+  };

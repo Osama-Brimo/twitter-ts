@@ -72,6 +72,7 @@ type Query {
   searchHashtagsAndCount(q: String, offset: Int, limit: Int): SearchResult!
 
   getHashtag(hashtag: String): Hashtag
+  getTrendingHashtags: [Hashtag]
 
   findCommonBetweenUsers(
     handleA: String
@@ -246,7 +247,6 @@ type Like {
 }
 type Hashtag {
   id: UUID!
-  kind: Trend!
   hashtag: String!
   tweets: [Tweet]
   tweetCount: NonNegativeInt!
